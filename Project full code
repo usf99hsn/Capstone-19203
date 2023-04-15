@@ -1,0 +1,77 @@
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#define ONE_WIRE_BUS 23
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+#include <Adafruit_10DOF.h>
+#include "DHT.h"
+#define DHTPIN 22   
+#define DHTTYPE DHT22  
+DHT dht(DHTPIN, DHTTYPE);
+
+#define sensorPin A0
+
+void setup() {
+
+Serial.begin(9600);
+
+sensors.begin();
+dht.begin();
+
+pinMode(24, OUTPUT);
+pinMode(25, OUTPUT);
+pinMode(26, OUTPUT);
+
+}
+
+void loop() {
+
+sensors.requestTemperatures(); 
+  Serial.print("Water temperature: ");
+  Serial.print(sensors.getTempCByIndex(0));
+  Serial.println("°C"); 
+  delay(1000);
+if(sensors.getTempCByIndex(0)<24){
+digitalWrite(26, LOW);  
+} else {
+digitalWrite(26, HIGH);
+}
+
+if(sensors.getTempCByIndex(0)>30){
+digitalWrite(25, LOW);  
+} else {
+digitalWrite(25, HIGH);
+}
+
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  Serial.print("Air humidity: ");
+  Serial.print(h);
+  Serial.print("% Air temperature: ");
+  Serial.print(t);
+  Serial.println("°C "); 
+if(Serial.print(t)>30){
+digitalWrite(24, HIGH);  
+} else{
+  digitalWrite(24, LOW);
+}
+
+Serial.print("CO2: ");
+Serial.print(readSensor());
+Serial.println("PPM");
+if(readSensor()>22){
+digitalWrite(24, HIGH);  
+} else{
+    
+digitalWrite(24, LOW);
+}
+
+}
+
+int readSensor() {
+
+  unsigned int sensorValue = analogRead(sensorPin);  // Read the analog value from sensor
+
+  unsigned int outputValue = map(sensorValue, 0, 1023, 0, 255); // map the 10-bit data to 8-bit data
+}
