@@ -51,7 +51,7 @@ digitalWrite(25, HIGH);
   Serial.print("% Air temperature: ");
   Serial.print(t);
   Serial.println("°C "); 
-if(Serial.print(t)>30){
+if(Serial.print(t)>30 || readSensor()>22){
 digitalWrite(24, HIGH);  
 } else{
   digitalWrite(24, LOW);
@@ -60,18 +60,12 @@ digitalWrite(24, HIGH);
 Serial.print("CO2: ");
 Serial.print(readSensor());
 Serial.println("PPM");
-if(readSensor()>22){
-digitalWrite(24, HIGH);  
-} else{
-    
-digitalWrite(24, LOW);
-}
 
 }
 
 int readSensor() {
 
-  unsigned int sensorValue = analogRead(sensorPin);  // Read the analog value from sensor
+  unsigned int sensorValue = analogRead(sensorPin);
 
-  unsigned int outputValue = map(sensorValue, 0, 1023, 0, 255); // map the 10-bit data to 8-bit data
+  unsigned int outputValue = map(sensorValue, 0, 1023, 0, 255);
 }
